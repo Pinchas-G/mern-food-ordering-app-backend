@@ -5,7 +5,7 @@ const getCurrentUser = async (req: Request, res: Response) => {
     try {
         const currentUser = await User.findOne({ _id: req.userId });
         if (!currentUser) {
-            return res.json(500).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
         res.json(currentUser);
     } catch (error) {
@@ -20,7 +20,7 @@ const createCurrentUser = async (req: Request, res: Response) => {
         const existingUser = await User.findOne({ auth0Id });
 
         if (existingUser) {
-            res.status(200).send();
+            return res.sendStatus(200);
         }
 
         const newUser = new User(req.body);
@@ -55,8 +55,6 @@ const updateCurrentUser = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error updating user' });
     }
 }
-
-
 
 export default {
     getCurrentUser,
