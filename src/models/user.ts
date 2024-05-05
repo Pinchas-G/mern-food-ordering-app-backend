@@ -9,18 +9,23 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        trim: true,
     },
     name: {
         type: String,
+        trim: true,
     },
     addressLine1: {
         type: String,
+        trim: true,
     },
     city: {
         type: String,
+        trim: true,
     },
     country: {
         type: String,
+        trim: true,
     },
 });
 
