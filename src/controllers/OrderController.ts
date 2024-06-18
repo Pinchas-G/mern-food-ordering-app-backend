@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { createCheckSchema } from "express-validator/src/middlewares/schema";
 import Stripe from "stripe";
 import Restaurant, { menuItemType } from "../models/restaurant";
 import Order from "../models/order";
@@ -65,7 +64,7 @@ const stripeWebhookHandler = async (req: Request, res: Response) => {
         await order.save();
     }
 
-    res.status(200).send();
+    res.sendStatus(200);
 };
 
 const createCheckoutSession = async (req: Request, res: Response) => {

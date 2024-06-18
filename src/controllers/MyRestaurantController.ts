@@ -102,7 +102,7 @@ const updateOrderStatus = async (req: Request, res: Response) => {
         const restaurant = await Restaurant.findById(order.restaurant);
 
         if (restaurant?.user?._id.toString() !== req.userId) {
-            return res.status(401).send();
+            return res.sendStatus(401);
         }
 
         order.status = status;
