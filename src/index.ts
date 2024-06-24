@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import { v2 as cloudinary } from 'cloudinary';
 import helmet from 'helmet';
 import expressRateLimit from 'express-rate-limit';
-import sanitizeHtml from 'sanitize-html';
+import { sanitizeRequestMiddleware } from './middleware/sanitizeRequest';
 import mongoSanitize from 'express-mongo-sanitize';
 
 // Import routes
@@ -36,20 +36,7 @@ app.use(expressRateLimit({
     message: 'Too many requests from this IP, please try again later.',
 }));
 app.use(express.json());
-
-// Sanitize request body
-app.use((req, res, next) => {
-    if (req.body) req.body = sanitizeRequestBody(req.body);
-    next();
-});
-
-const sanitizeRequestBody = (body: any) => {
-    return sanitizeHtml(body, {
-        allowedTags: [],
-        allowedAttributes: {}
-    });
-};
-
+app.use(sanitizeRequestMiddleware);
 app.use(mongoSanitize());
 
 // Health check endpoint
