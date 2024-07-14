@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import expressRateLimit from 'express-rate-limit';
 import { sanitizeRequestMiddleware } from './middleware/sanitizeRequest';
 import mongoSanitize from 'express-mongo-sanitize';
+import errorHandler from './middleware/errorHandler';
 
 // Import routes
 import myUserRoute from './routes/MyUserRoute';
@@ -15,8 +16,23 @@ import restaurantRoute from './routes/RestaurantRoute';
 import orderRoute from './routes/OrderRoute';
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
-    .then(() => console.log('Connected to database!'));
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string, {
+            autoIndex: false,
+            connectTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
+            family: 4,
+            serverSelectionTimeoutMS: 20000,
+        });
+        console.log('Connected to database!');
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+        process.exit(1); // Exit process with failure
+    }
+};
+
+connectDB();
 
 // Configure Cloudinary
 cloudinary.config({
@@ -35,8 +51,8 @@ app.use(expressRateLimit({
     limit: 500,
     message: 'Too many requests from this IP, please try again later.',
 }));
+app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
 app.use(express.json());
-app.use(sanitizeRequestMiddleware);
 app.use(mongoSanitize());
 
 // Health check endpoint
@@ -45,14 +61,16 @@ app.get('/health', async (req: Request, res: Response) => {
 });
 
 // Routes
-app.use('/api/my/user', myUserRoute);
-app.use('/api/my/restaurant', myRestaurantRoute);
-app.use('/api/restaurant', restaurantRoute);
+app.use('/api/my/user', sanitizeRequestMiddleware, myUserRoute);
+app.use('/api/my/restaurant', sanitizeRequestMiddleware, myRestaurantRoute);
+app.use('/api/restaurant', sanitizeRequestMiddleware, restaurantRoute);
 app.use('/api/order', orderRoute);
-app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
+
+// Error handling middleware
+app.use(errorHandler);
 
 // Start server
-const PORT = 7000;
+const PORT = process.env.SERVER_PORT || 7000;
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
