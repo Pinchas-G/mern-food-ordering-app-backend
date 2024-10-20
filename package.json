@@ -5,7 +5,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "dev": "concurrently \"nodemon\" \"npm run stripe\"",
-    "stripe": "stripe listen --forward-to localhost:7000/api/order/checkout/webhook",
+    "stripe": "if [ \"$NODE_ENV\" != \"production\" ]; then stripe listen --forward-to localhost:7000/api/order/checkout/webhook; fi",
     "build": "npm install && npx tsc",
     "start": "node dist/index.js"
   },
@@ -29,7 +29,7 @@
     "mongoose": "^8.3.0",
     "multer": "^1.4.5-lts.1",
     "sanitize-html": "^2.13.0",
-    "stripe": "^15.7.0"
+    "stripe": "^15.12.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
