@@ -4,7 +4,7 @@
 
 This project showcases the development of a comprehensive food ordering platform using modern web technologies. The application includes features such as user registration, restaurant search, cart management, and real-time order status updates. The project is built using React, Node.js, MongoDB, and Stripe, demonstrating a full-stack approach to creating an enterprise-level application.
 
-- [View the live site](https://mern-food-ordering-app-frontend-2ded.onrender.com/) 🚀
+- [View the live site](https://foodfood.onrender.com/) 🚀
 
 ## Key Features
 
