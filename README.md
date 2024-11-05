@@ -139,10 +139,6 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 For any questions or suggestions, please reach out to [email](mailto:123pinchas@gmail.com).
 
----
-
-Feel free to modify the content to better suit your project's specifics or personal preferences!
-
 ## Screenshots
 
 ### Home Page
