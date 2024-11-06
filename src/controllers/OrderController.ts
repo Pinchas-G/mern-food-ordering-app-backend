@@ -29,6 +29,10 @@ const getMyOrders = async (req: Request, res: Response) => {
             .populate('user')
             .sort({ createdAt: -1 });
 
+        if (orders.length === 0) {
+            return res.status(404).json({ message: "No orders found" });
+        }
+
         res.json(orders);
     } catch (error) {
         console.log(error);
